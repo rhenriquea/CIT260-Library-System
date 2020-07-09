@@ -19,15 +19,6 @@ public class Book {
         this.rented = rented;
     }
 
-    public JSONObject toJSON() {
-        JSONObject bookJSON = new JSONObject();
-        bookJSON.put("ISBN", this.isbn );
-        bookJSON.put("title", this.title );
-        bookJSON.put("author", this.title );
-        bookJSON.put("rented", this.rented);
-        return bookJSON;
-    }
-
     public int getIsbn() {
         return isbn;
     }
@@ -62,11 +53,11 @@ public class Book {
 
     @Override
     public String toString() {
-        return "Book{\n" +
-                "  isbn=" + isbn + ", \n" +
-                "  title='" + title + "', \n" +
-                "  author='" + author + "', \n" +
-                "  rented=" + rented + ", \n" +
+        return "{\n" +
+                "  \"isbn\": " + isbn + ", \n" +
+                "  \"title\": \"" + title + "\", \n" +
+                "  \"author\": \"" + author + "\", \n" +
+                "  \"rented\": " + rented + " \n" +
                 "}\n";
     }
 }

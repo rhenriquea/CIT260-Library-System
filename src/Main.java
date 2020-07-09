@@ -1,3 +1,13 @@
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
@@ -11,8 +21,8 @@ public class Main {
 
         System.out.print("\nWelcome to the Library management system.\n");
 
-        do  {
-            if(!successMessage.isBlank()) {
+        do {
+            if (!successMessage.isBlank()) {
                 System.out.println(successMessage);
                 successMessage = "";
             }
@@ -20,11 +30,13 @@ public class Main {
             System.out.println("[0] ADD A BOOK");
             System.out.println("[1] ADD A CUSTOMER");
             System.out.println("[2] BOOKS LIST");
-            System.out.println("[3] RENT BOOK FOR CUSTOMER");
-            System.out.println("[4] RETURN BOOK FROM CUSTOMER");
+            System.out.println("[3] CUSTOMERS LIST");
+            System.out.println("[4] RENT BOOK FOR CUSTOMER");
             System.out.println("[5] CUSTOMER RENTED BOOKS");
-            System.out.println("[6] CUSTOMERS LIST");
-            System.out.println("[7] EXIT");
+            System.out.println("[6] RETURN BOOK FROM CUSTOMER");
+            System.out.println("[7] LOAD EXTERNAL DATA");
+            System.out.println("[8] EXPORT LIBRARY JSON");
+            System.out.println("[9] EXIT");
 
             int userOption = userInput.nextInt();
 
@@ -39,18 +51,24 @@ public class Main {
                     library.listBooks();
                     break;
                 case 3:
-                    rentBook();
+                    library.listCustomers();
                     break;
                 case 4:
-                    returnBookFromCustomer();
+                    rentBook();
                     break;
                 case 5:
                     listCustomerBooks();
                     break;
                 case 6:
-                    library.listCustomers();
+                    returnBookFromCustomer();
                     break;
                 case 7:
+                    readJSON();
+                    break;
+                case 8:
+                    exportJSON();
+                    break;
+                case 9:
                     System.out.println("Goodbye!");
                     System.exit(0);
                     break;
@@ -127,4 +145,65 @@ public class Main {
         library.setBookAsRented(book, false);
     }
 
+    private static void exportJSON() {
+        JSONObject libraryJSON = new JSONObject();
+        JSONArray customersJSON = new JSONArray();
+        JSONArray booksJSON = new JSONArray();
+
+        customersJSON.addAll(library.getCustomers());
+        booksJSON.addAll(library.getBooks());
+
+        libraryJSON.put("books", booksJSON);
+        libraryJSON.put("customers", customersJSON);
+
+        try(FileWriter file = new FileWriter("data.json")) {
+            file.write(libraryJSON.toJSONString());
+            file.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void readJSON() {
+        JSONParser parser = new JSONParser();
+        File file = new File("data.json");
+
+        System.out.println(file.exists());
+
+        try {
+            Object obj = parser.parse(new FileReader("data.json"));
+            JSONObject jsonData = (JSONObject) obj;
+
+            JSONArray books = (JSONArray) jsonData.get("books");
+            books.forEach(b -> parseBookObj((JSONObject) b));
+
+            JSONArray customers = (JSONArray) jsonData.get("customers");
+            customers.forEach(c -> parseCustomerObj((JSONObject) c));
+
+            library.listCustomers();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void parseBookObj(JSONObject b) {
+        long isbn = (long) b.get("isbn");
+        String author = (String) b.get("author");
+        String title = (String) b.get("title");
+        boolean rented = (boolean) b.get("rented");
+        Book record = new Book((int) isbn, title, author, rented);
+        library.addBook(record);
+    }
+
+    private static void parseCustomerObj(JSONObject c) {
+        long customerID = (long) c.get("customerID");
+        String name = (String) c.get("name");
+        ArrayList<Book> books = (ArrayList<Book>) c.get("books");
+        Customer record = new Customer((int) customerID, name);
+        record.setBooks(books);
+        library.addCustomer(record);
+    }
 }

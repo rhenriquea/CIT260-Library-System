@@ -1,24 +1,24 @@
 import java.util.ArrayList;
 
 public class Customer {
-    private int renterID;
+    private int customerID;
     private String name;
     private ArrayList<Book> books;
 
     public Customer() {
-        renterID = 0;
+        customerID = 0;
         name = null;
         books = new ArrayList<Book>();
     }
 
-    public Customer(int renterID, String name) {
-        this.renterID = renterID;
+    public Customer(int customerID, String name) {
+        this.customerID = customerID;
         this.name = name;
         books = new ArrayList<Book>();
     }
 
-    public int getRenterID() {
-        return renterID;
+    public int getCustomerID() {
+        return customerID;
     }
 
     public String getName() {
@@ -27,6 +27,14 @@ public class Customer {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public ArrayList<Book> getBooks() {
+        return books;
+    }
+
+    public void setBooks(ArrayList<Book> books) {
+        this.books = books;
     }
 
     public void rentBook(Book rentedBook) {
@@ -38,15 +46,17 @@ public class Customer {
     }
 
     public void listRentedBooks() {
-        books.forEach(b -> System.out.println(this.name + " is now renting " + b.getTitle()));
+        books.forEach(book -> System.out.print(
+                name + "is renting" + book.getTitle() + " from the author " + book.getAuthor() + "\n"
+        ));
     }
 
     @Override
     public String toString() {
-        return "Renter{" +
-                "renterID=" + renterID +
-                ", name='" + name + '\'' +
-                ", books=" + books +
-                '}';
+        return "{\n" +
+                "  \"customerID\": " + customerID + ", \n" +
+                "  \"name\": \"" + name + "\", \n" +
+                "  \"books\": " + books + " \n" +
+                "}\n";
     }
 }

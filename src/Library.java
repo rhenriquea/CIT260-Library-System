@@ -18,10 +18,16 @@ public class Library {
     }
 
     public void listBooks() {
+        if(books.size() == 0) {
+            System.out.println("No books registered.");
+        }
         books.forEach(book -> System.out.println(book));
     }
 
     public void listCustomers() {
+        if(customers.size() == 0) {
+            System.out.println("No customers registered.");
+        }
         customers.forEach(customer -> System.out.println(customer));
     }
 
@@ -36,7 +42,7 @@ public class Library {
 
     public Customer findCustomerByID(int customerID) {
         for (Customer customer : customers) {
-            if (customer.getRenterID() == customerID) {
+            if (customer.getCustomerID() == customerID) {
                 return customer;
             }
         }
@@ -51,5 +57,13 @@ public class Library {
     public void setBookAsRented(Book book, boolean rented) {
         Book rentedBook = books.get(books.indexOf(book));
         rentedBook.setRented(rented);
+    }
+
+    public ArrayList<Book> getBooks() {
+        return books;
+    }
+
+    public ArrayList<Customer> getCustomers() {
+        return customers;
     }
 }
