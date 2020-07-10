@@ -1,18 +1,9 @@
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
 
     static Library library = new Library();
+    static FileManager fileManager = new FileManager();
     static Scanner userInput = new Scanner(System.in);
     static Boolean running = true;
     static String successMessage = "";
@@ -63,10 +54,10 @@ public class Main {
                     returnBookFromCustomer();
                     break;
                 case 7:
-                    readJSON();
+                    fileManager.readJSON(library);
                     break;
                 case 8:
-                    exportJSON();
+                    fileManager.exportJSON(library);
                     break;
                 case 9:
                     System.out.println("Goodbye!");
@@ -133,7 +124,7 @@ public class Main {
 
     private static void returnBookFromCustomer() {
         int renterId, bookISBN;
-        System.out.println("\nEnter the renter ID:");
+        System.out.println("\nEnter the customer ID:");
         renterId = userInput.nextInt();
 
         System.out.println("\nEnter the book ISBN:");
@@ -143,67 +134,5 @@ public class Main {
         customer.returnBook(bookISBN);
         Book book = library.findBookByISBN(bookISBN);
         library.setBookAsRented(book, false);
-    }
-
-    private static void exportJSON() {
-        JSONObject libraryJSON = new JSONObject();
-        JSONArray customersJSON = new JSONArray();
-        JSONArray booksJSON = new JSONArray();
-
-        customersJSON.addAll(library.getCustomers());
-        booksJSON.addAll(library.getBooks());
-
-        libraryJSON.put("books", booksJSON);
-        libraryJSON.put("customers", customersJSON);
-
-        try(FileWriter file = new FileWriter("data.json")) {
-            file.write(libraryJSON.toJSONString());
-            file.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private static void readJSON() {
-        JSONParser parser = new JSONParser();
-        File file = new File("data.json");
-
-        System.out.println(file.exists());
-
-        try {
-            Object obj = parser.parse(new FileReader("data.json"));
-            JSONObject jsonData = (JSONObject) obj;
-
-            JSONArray books = (JSONArray) jsonData.get("books");
-            books.forEach(b -> parseBookObj((JSONObject) b));
-
-            JSONArray customers = (JSONArray) jsonData.get("customers");
-            customers.forEach(c -> parseCustomerObj((JSONObject) c));
-
-            library.listCustomers();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private static void parseBookObj(JSONObject b) {
-        long isbn = (long) b.get("isbn");
-        String author = (String) b.get("author");
-        String title = (String) b.get("title");
-        boolean rented = (boolean) b.get("rented");
-        Book record = new Book((int) isbn, title, author, rented);
-        library.addBook(record);
-    }
-
-    private static void parseCustomerObj(JSONObject c) {
-        long customerID = (long) c.get("customerID");
-        String name = (String) c.get("name");
-        ArrayList<Book> books = (ArrayList<Book>) c.get("books");
-        Customer record = new Customer((int) customerID, name);
-        record.setBooks(books);
-        library.addCustomer(record);
     }
 }
