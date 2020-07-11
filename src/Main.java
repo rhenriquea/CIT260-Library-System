@@ -3,20 +3,14 @@ import java.util.Scanner;
 public class Main {
 
     static Library library = new Library();
-    static FileManager fileManager = new FileManager();
     static Scanner userInput = new Scanner(System.in);
     static Boolean running = true;
-    static String successMessage = "";
 
     public static void main(String[] args) {
 
         System.out.print("\nWelcome to the Library management system.\n");
 
         do {
-            if (!successMessage.isBlank()) {
-                System.out.println(successMessage);
-                successMessage = "";
-            }
             System.out.println("Choose a number (e.g 0,1,2 etc) option to continue:\n");
             System.out.println("[0] ADD A BOOK");
             System.out.println("[1] ADD A CUSTOMER");
@@ -28,8 +22,10 @@ public class Main {
             System.out.println("[7] LOAD EXTERNAL DATA");
             System.out.println("[8] EXPORT LIBRARY JSON");
             System.out.println("[9] EXIT");
+            System.out.println("[10] ADD A LIBRARIAN");
 
             int userOption = userInput.nextInt();
+            userInput.nextLine();
 
             switch (userOption) {
                 case 0:
@@ -54,14 +50,17 @@ public class Main {
                     returnBookFromCustomer();
                     break;
                 case 7:
-                    fileManager.readJSON(library);
+                    FileManager.readJSON(library);
                     break;
                 case 8:
-                    fileManager.exportJSON(library);
+                    FileManager.exportJSON(library);
                     break;
                 case 9:
                     System.out.println("Goodbye!");
                     System.exit(0);
+                    break;
+                case 10:
+                    addEmployerToLibrary();
                     break;
                 default:
                     System.out.println("Invalid option!");
@@ -74,63 +73,136 @@ public class Main {
         int isbn;             // ISBN as ID from the Book
         String title, author; // Title and Author of the book
 
-        System.out.println("\nEnter the book ISBN:");
-        isbn = userInput.nextInt();
+        isbn = InputValidators.validateInt(
+                userInput,
+                "Enter the book ISBN",
+                "Invalid input. Please use an integer bigger than 0."
+        );
 
-        System.out.println("\nEnter the book title:");
-        title = userInput.next();
+        title = InputValidators.validateString(
+                userInput,
+                "Enter the book title",
+                "Invalid name. Please try again."
+        );
 
-        System.out.println("\nEnter the book author:");
-        author = userInput.next();
+        author = InputValidators.validateString(
+                userInput,
+                "Enter the book author",
+                "Invalid name. Please try again."
+        );
 
         Book newBook = new Book(isbn, title, author, false);
         library.addBook(newBook);
-        successMessage = "New book added: \n" + newBook.toString();
+        System.out.println("New book added: \n" + newBook.toString());
     }
 
     private static void addCustomerToLibrary() {
-        String name;
+        int id = library.getCustomers().size() + 1;
 
-        System.out.println("\nEnter the customer name:");
-        name = userInput.next();
+        String name = InputValidators.validateString(
+                userInput,
+                "Enter the customer name",
+                "Invalid name. Please try again."
+        );
 
-        Customer newCustomer = new Customer(1, name);
+        String address = InputValidators.validateString(
+                userInput,
+                "Enter the customer address",
+                "Invalid address. Please try again."
+        );
+
+        int phone = InputValidators.validateInt(
+                userInput,
+                "Enter the customer phone number",
+                "Invalid input. Please use only integers bigger than 0."
+        );
+
+        Customer newCustomer = new Customer(id, name, address, phone);
         library.addCustomer(newCustomer);
     }
 
+    private static void addEmployerToLibrary() {
+        int id = library.getLibrarians().size() + 1;
+
+        String name = InputValidators.validateString(
+                userInput,
+                "Enter the librarian name",
+                "Invalid name. Please try again."
+        );
+
+        String address = InputValidators.validateString(
+                userInput,
+                "Enter the librarian address",
+                "Invalid address. Please try again."
+        );
+
+        int phone = InputValidators.validateInt(
+                userInput,
+                "Enter the librarian phone number",
+                "Invalid input. Please use only integers bigger than 0."
+        );
+
+        int officeNumber = InputValidators.validateInt(
+                userInput,
+                "Enter the librarian office number",
+                "Invalid input. Please use only integers bigger than 0."
+        );
+
+        Librarian newLibrarian = new Librarian(id, name, address, phone, officeNumber);
+        library.addLibrarian(newLibrarian);
+    }
+
     private static void rentBook() {
-        int renterId, bookISBN;
+        int customerID, bookISBN;
 
-        System.out.println("\nEnter the book ISBN:");
-        bookISBN = userInput.nextInt();
+        bookISBN = InputValidators.validateInt(
+                userInput,
+                "Enter the book ISBN",
+                "Invalid input. Please use an integer bigger than 0."
+        );
 
-        System.out.println("\nEnter the renter ID:");
-        renterId = userInput.nextInt();
+        customerID = InputValidators.validateInt(
+                userInput,
+                "Enter the customer ID",
+                "Invalid input. Please use only integers bigger than 0."
+        );
 
         Book book = library.findBookByISBN(bookISBN);
-        Customer customer = library.findCustomerByID(renterId);
+        Customer customer = library.findCustomerByID(customerID);
+
         library.setBookAsRented(book, true);
         library.rentBook(book, customer);
     }
 
     private static void listCustomerBooks() {
-        int renterId;
-        System.out.println("\nEnter the renter ID:");
-        renterId = userInput.nextInt();
+        int customerID;
 
-        Customer customer = library.findCustomerByID(renterId);
+        customerID = InputValidators.validateInt(
+                userInput,
+                "Enter the customer ID",
+                "Invalid input. Please use an integer bigger than 0."
+        );
+
+        Customer customer = library.findCustomerByID(customerID);
         customer.listRentedBooks();
     }
 
     private static void returnBookFromCustomer() {
-        int renterId, bookISBN;
-        System.out.println("\nEnter the customer ID:");
-        renterId = userInput.nextInt();
+        int customerID, bookISBN;
 
-        System.out.println("\nEnter the book ISBN:");
-        bookISBN = userInput.nextInt();
+        customerID = InputValidators.validateInt(
+                userInput,
+                "Enter the customer ID",
+                "Invalid input. Please use an integer bigger than 0."
+        );
 
-        Customer customer = library.findCustomerByID(renterId);
+        bookISBN = InputValidators.validateInt(
+                userInput,
+                "Enter the book ISBN",
+                "Invalid input. Please use an integer bigger than 0."
+        );
+
+        Customer customer = library.findCustomerByID(customerID);
         customer.returnBook(bookISBN);
         Book book = library.findBookByISBN(bookISBN);
         library.setBookAsRented(book, false);

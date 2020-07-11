@@ -1,5 +1,6 @@
 /**
  * Class to represent a book.
+ *
  * @author Alex Uskova
  * @author Rafael Almeida
  * @version 1.0
@@ -26,8 +27,10 @@ public class Book {
     }
 
     // GETTERS
+
     /**
      * Gets the book ISBN
+     *
      * @return An int representing the book ISBN.
      */
     public int getIsbn() {
@@ -35,32 +38,8 @@ public class Book {
     }
 
     /**
-     * Gets the book title
-     * @return A String representing the book title.
-     */
-    public String getTitle() {
-        return title;
-    }
-
-    /**
-     * Gets the book author
-     * @return A String representing the book author.
-     */
-    public String getAuthor() {
-        return author;
-    }
-
-    /**
-     * Gets the book rented status
-     * @return A boolean representing the rental status of the book.
-     */
-    public boolean isRented() {
-        return rented;
-    }
-
-    // SETTERS
-    /**
      * Sets the book ISBN.
+     *
      * @param isbn An int containing the ISBN number.
      */
     public void setIsbn(int isbn) {
@@ -68,15 +47,37 @@ public class Book {
     }
 
     /**
+     * Gets the book title
+     *
+     * @return A String representing the book title.
+     */
+    public String getTitle() {
+        return title;
+    }
+
+    /**
      * Sets the book title.
+     *
      * @param title A String containing the book title.
      */
     public void setTitle(String title) {
         this.title = title;
     }
 
+    // SETTERS
+
+    /**
+     * Gets the book author
+     *
+     * @return A String representing the book author.
+     */
+    public String getAuthor() {
+        return author;
+    }
+
     /**
      * Sets the book author.
+     *
      * @param author A String containing the book author.
      */
     public void setAuthor(String author) {
@@ -84,7 +85,17 @@ public class Book {
     }
 
     /**
+     * Gets the book rented status
+     *
+     * @return A boolean representing the rental status of the book.
+     */
+    public boolean isRented() {
+        return rented;
+    }
+
+    /**
      * Sets the book rental availability status.
+     *
      * @param rented A boolean indicating if the book is rented or not.
      */
     public void setRented(boolean rented) {

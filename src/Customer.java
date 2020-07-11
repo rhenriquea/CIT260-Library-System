@@ -2,64 +2,65 @@ import java.util.ArrayList;
 
 /**
  * Class to represent a customer.
+ *
  * @author Alex Uskova
  * @author Rafael Almeida
  * @version 1.0
  */
 public class Customer extends Person {
-    private int id;                 // customerID as a single ID
-    private String name;            // name as the customer name
     private ArrayList<Book> books;  // books as the list of rented books
 
-    public Customer() {
-        id = 0;
-        name = null;
-        books = new ArrayList<Book>();
-    }
-
-    public Customer(int id, String name) {
-        this.id = id;
-        this.name = name;
+    // A parameterized constructor that creates a customer object.
+    public Customer(int id, String name, String address, int phone) {
+        super(id, name, address, phone);
         books = new ArrayList<Book>();
     }
 
     // GETTERS
 
-    public int getCustomerID() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
+    /**
+     * Gets the customer rented books
+     *
+     * @return An array of books rented by the customer.
+     */
     public ArrayList<Book> getBooks() {
         return books;
     }
 
     // SETTERS
 
-    public void setCustomerID(int id) {
-        this.id = id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
+    /**
+     * Sets the customer books.
+     *
+     * @param books An ArraList<Book> containing the customer rented books.
+     */
     public void setBooks(ArrayList<Book> books) {
         this.books = books;
     }
 
+    // METHODS
 
-    public void rentBook(Book rentedBook) {
-        this.books.add(rentedBook);
+    /**
+     * Add a book to user rented books collection
+     *
+     * @param book A Book to be added to the customer rented books.
+     */
+    public void rentBook(Book book) {
+        this.books.add(book);
     }
 
+    /**
+     * Removes book from customer rented books collection
+     *
+     * @param bookISBN A int containing the ISBN to be removed from the collection.
+     */
     public void returnBook(int bookISBN) {
         books.removeIf(b -> b.getIsbn() == bookISBN);
     }
 
+    /**
+     * Prints a message saying which books are in the customer rented books array.
+     */
     public void listRentedBooks() {
         books.forEach(book -> System.out.print(
                 name + " is renting " + book.getTitle() + " from the author " + book.getAuthor() + "\n"
@@ -68,10 +69,19 @@ public class Customer extends Person {
 
     @Override
     public String toString() {
+        // Format the book class and print as a string in a JSON format
         return "{\n" +
-                "  \"customerID\": " + id + ", \n" +
+                "  \"customerID\": " + this.getId() + ", \n" +
                 "  \"name\": \"" + name + "\", \n" +
+                "  \"address\": \"" + address + "\", \n" +
+                "  \"phone\": \"" + phone + "\", \n" +
                 "  \"books\": " + books + " \n" +
                 "}\n";
+    }
+
+    @Override
+    public void getInfo() {
+        super.getInfo();
+        System.out.println("Books: " + books);
     }
 }
