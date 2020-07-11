@@ -30,5 +30,6 @@ public class Librarian extends Person {
     public void getInfo() {
         super.getInfo();
         System.out.println("Office Number: " + officeNumber);
+        System.out.print("\u001B[0m");
     }
 }

@@ -82,9 +82,9 @@ public class Library {
      */
     public void listBooks() {
         if (books.size() == 0) {
-            System.out.println("No books registered.");
+            System.out.println("\u001B[33m" + "No books registered." + "\u001B[0m");
         }
-        books.forEach(book -> System.out.println(book));
+        books.forEach(book -> book.getInfo());
     }
 
     /**
@@ -94,7 +94,7 @@ public class Library {
      */
     public void listCustomers() {
         if (customers.size() == 0) {
-            System.out.println("No customers registered.");
+            System.out.println("\u001B[33m" + "No customers registered." + "\u001B[0m");
         }
         customers.forEach(customer -> customer.getInfo());
     }
@@ -106,7 +106,7 @@ public class Library {
      */
     public void listLibrarians() {
         if (librarians.size() == 0) {
-            System.out.println("No librarians registered.");
+            System.out.println("\u001B[33m" + "No librarians registered." + "\u001B[0m");
         }
         librarians.forEach(librarian -> librarian.getInfo());
     }
@@ -123,7 +123,7 @@ public class Library {
                 return book;
             }
         }
-        System.out.println("The book with ISBN " + bookISBN + " was not found.");
+        System.out.println("\u001B[33m" + "The book with ISBN " + bookISBN + " was not found." + "\u001B[0m");
         return null;
     }
 
@@ -139,7 +139,7 @@ public class Library {
                 return customer;
             }
         }
-        System.out.println("The customer with ID " + customerID + " was not found.");
+        System.out.println("\u001B[31m" + "The customer with ID " + customerID + " was not found." + "\u001B[0m");
         return null;
     }
 

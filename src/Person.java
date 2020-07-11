@@ -106,10 +106,12 @@ public class Person {
     }
 
     /**
-     * Prints the information of the person (excluding id)
+     * Prints the information of the person
      */
     public void getInfo() {
-        System.out.println("\nName: " + name);
+        System.out.print("\u001B[34m");
+        System.out.println("\nID: " + id);
+        System.out.println("Name: " + name);
         System.out.println("Address: " + address);
         System.out.println("Phone: " + phone);
     }

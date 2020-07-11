@@ -8,16 +8,14 @@ import java.util.ArrayList;
  * @version 1.0
  */
 public class Customer extends Person {
-    private ArrayList<Book> books;  // books as the list of rented books
+    private ArrayList<Book> books = new ArrayList<Book>();  // books as the list of rented books
 
     // A parameterized constructor that creates a customer object.
     public Customer(int id, String name, String address, int phone) {
         super(id, name, address, phone);
-        books = new ArrayList<Book>();
     }
 
     // GETTERS
-
     /**
      * Gets the customer rented books
      *
@@ -62,8 +60,15 @@ public class Customer extends Person {
      * Prints a message saying which books are in the customer rented books array.
      */
     public void listRentedBooks() {
+        if(books.size() == 0) {
+            System.out.print("\u001B[31m" + "Customer does not have any book rented" + "\u001B[0m");
+            return;
+        }
+
         books.forEach(book -> System.out.print(
-                name + " is renting " + book.getTitle() + " from the author " + book.getAuthor() + "\n"
+                "\u001B[32m" +
+                name + " is now renting " + book.getTitle() + " from the author " + book.getAuthor() + "\n" +
+                "\u001B[0m"
         ));
     }
 
@@ -83,5 +88,6 @@ public class Customer extends Person {
     public void getInfo() {
         super.getInfo();
         System.out.println("Books: " + books);
+        System.out.print("\u001B[0m");
     }
 }

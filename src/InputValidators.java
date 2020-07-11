@@ -24,8 +24,10 @@ public class InputValidators {
             System.out.println("\n" + message + ":");
             // Check if input is not an integer
             while (!input.hasNextInt()) {
+                System.out.print("\u001B[31m");
                 // Prints error message in case of not integer
                 System.out.println(errorMessage);
+                System.out.print("\u001B[0m\n");
                 // Prints the message arg again
                 System.out.println(message + ":");
                 // Go to next line of input
@@ -62,10 +64,15 @@ public class InputValidators {
 
             // Check if string matches regex (only alphabets,numbers and spaces
             if (!value.matches(regex)) {
-                // Prints error message in case of not integer
+
+                System.out.print("\u001B[31m");
+                // Prints custom error message in case of not integer
                 System.out.println(errorMessage);
-                // Prints the message arg
-                System.out.println(message + ":");
+                // Prints validation error message
+                System.out.println("Only alphabet and integers are accepted. " +
+                        "Comma, dots and special chars are not accepted.");
+                System.out.print("\u001B[0m");
+
             }
             // do loop while the string is invalid
         } while (!value.matches(regex));

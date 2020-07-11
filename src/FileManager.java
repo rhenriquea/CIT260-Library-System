@@ -83,21 +83,28 @@ public class FileManager {
             try {
                 // Parses the file as an Object
                 Object obj = parser.parse(new FileReader(filename));
+
                 // Casts the Object to a JSONObject
                 JSONObject jsonData = (JSONObject) obj;
 
                 // Get the JSON array from the property books
                 JSONArray books = (JSONArray) jsonData.get("books");
+
                 // Parse each JSON book reference to the library
-                books.forEach(b -> parseBookObj((JSONObject) b, library));
+                books.forEach(book -> parseBookToLibrary((JSONObject) book, library));
 
                 // Get the JSON array from the property customers
                 JSONArray customers = (JSONArray) jsonData.get("customers");
                 // Parse each JSON customer reference to the library
-                customers.forEach(c -> parseCustomerObj((JSONObject) c, library));
+                customers.forEach(customer -> parseCustomerToLibrary((JSONObject) customer, library));
+
+                // Get the JSON array from the property librarians
+                JSONArray librarians = (JSONArray) jsonData.get("librarians");
+                // Parse each JSON librarian reference to the library
+                librarians.forEach(librarian -> parseLibrarianToLibrary((JSONObject) librarian, library));
 
                 // Print message of feedback for the user.
-                System.out.println("Information Loaded.");
+                System.out.println("\u001B[36m" + "Information Loaded from JSON file." + "\u001B[0m");
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (ParseException e) {
@@ -105,7 +112,7 @@ public class FileManager {
             }
         } else {
             // Print message of feedback for the user.
-            System.out.println("File not found. Creating a new file.");
+            System.out.println("\u001B[33m" + "File not found. Creating a new file." + "\u001B[0m");
             // Export a JSON based on the library reference
             exportJSON(library);
         }
@@ -117,7 +124,7 @@ public class FileManager {
      * @param jsonBook the single element of JSONObject stored in the JSON array
      * @param library  the Library instance to be filled from the parsed JSON
      */
-    private static void parseBookObj(JSONObject jsonBook, Library library) {
+    private static void parseBookToLibrary(JSONObject jsonBook, Library library) {
         // Cast isbn from JSON as long and store in the variable
         long isbn = (long) jsonBook.get("isbn");
         // Cast author from JSON as String and store in the variable
@@ -138,23 +145,69 @@ public class FileManager {
      * @param jsonCustomer the single element of JSONObject stored in the JSON array
      * @param library      the Library instance to be filled from the parsed JSON
      */
-    private static void parseCustomerObj(JSONObject jsonCustomer, Library library) {
+    private static void parseCustomerToLibrary(JSONObject jsonCustomer, Library library) {
+
         // Cast customerID from JSON as long and store in the variable
-        long customerID = (long) jsonCustomer.get("id");
+        long customerID = (long) jsonCustomer.get("customerID");
         // Cast customer name from JSON as String and store in the variable
         String name = (String) jsonCustomer.get("name");
         // Cast customer address from JSON as String and store in the variable
         String address = (String) jsonCustomer.get("address");
-        // Cast customer phone from JSON as int and store in the variable
-        int phone = (int) jsonCustomer.get("phone");
-        // Cast books array from JSON as ArrayList of Book and store in the variable
-        ArrayList<Book> books = (ArrayList<Book>) jsonCustomer.get("books");
+        // Cast customer phone from JSON as String, parse as int and store in the variable
+        int phone = Integer.parseInt((String) jsonCustomer.get("phone"));
+
         // Create a new Object instance with the JSON information
-        Customer record = new Customer((int) customerID, name, address, phone);
-        // Set the ArrayList of Book to the customer
-        record.setBooks(books);
+        Customer record = new Customer((int) customerID, name, address, (int) phone);
+
+        // Cast books array from JSON as ArrayList of Book and store in the variable
+        JSONArray booksJSON = (JSONArray) jsonCustomer.get("books");
+        booksJSON.forEach(book ->  parseCustomerBooks((JSONObject) book, record));
+
         // Add the Customer instance to the library instance
         library.addCustomer(record);
+    }
+
+    /**
+     * Parse a book JSON Object and add to the rented books by the customer
+     *
+     * @param jsonBook the single element of JSONObject stored in the JSON array
+     * @param customer the Customer instance to be filled with the parsed JSON
+     */
+    private static void parseCustomerBooks(JSONObject jsonBook, Customer customer) {
+        // Cast isbn from JSON as long and store in the variable
+        long isbn = (long) jsonBook.get("isbn");
+        // Cast author from JSON as String and store in the variable
+        String author = (String) jsonBook.get("author");
+        // Cast title from JSON as String and store in the variable
+        String title = (String) jsonBook.get("title");
+        // Cast rented from JSON as boolean and store in the variable
+        boolean rented = (boolean) jsonBook.get("rented");
+        // Create a new Object instance with the JSON information
+        Book rentedBook = new Book((int) isbn, title, author, rented);
+        customer.rentBook(rentedBook);
+    }
+
+    /**
+     * Parse a librarian JSON Object and add it to librarians array list in a instance of the library
+     *
+     * @param jsonLibrarian the single element of JSONObject stored in the JSON array
+     * @param library      the Library instance to be filled from the parsed JSON
+     */
+    private static void parseLibrarianToLibrary(JSONObject jsonLibrarian, Library library) {
+        // Cast librarianID from JSON as long and store in the variable
+        long librarianID = (long) jsonLibrarian.get("librarianID");
+        // Cast librarian name from JSON as String and store in the variable
+        String name = (String) jsonLibrarian.get("name");
+        // Cast librarian address from JSON as String and store in the variable
+        String address = (String) jsonLibrarian.get("address");
+        // Cast librarian phone from JSON as String, parse as int and store in the variable
+        int phone = Integer.parseInt((String) jsonLibrarian.get("phone"));
+        // Cast librarian office number from JSON as int and store in the variable
+        long officeNumber = (long) jsonLibrarian.get("officeNumber");
+        // Create a new Object instance with the JSON information
+        Librarian record = new Librarian((int) librarianID, name, address, (int) phone, (int) officeNumber);
+        // Add the Librarian instance to the library instance
+        library.addLibrarian(record);
     }
 
     /**

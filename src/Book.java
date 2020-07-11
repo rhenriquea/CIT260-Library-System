@@ -102,6 +102,19 @@ public class Book {
         this.rented = rented;
     }
 
+
+    /**
+     * Prints the information of the person
+     */
+    public void getInfo() {
+        System.out.print("\u001B[34m");
+        System.out.println("\nISBN: " + isbn);
+        System.out.println("Name: " + title);
+        System.out.println("Author: " + author);
+        System.out.println("Is available: " + !rented);
+        System.out.print("\u001B[0m");
+    }
+
     @Override
     public String toString() {
         // Format the book class and print as a string in a JSON format
@@ -112,4 +125,6 @@ public class Book {
                 "  \"rented\": " + rented + " \n" +
                 "}\n";
     }
+
+
 }
