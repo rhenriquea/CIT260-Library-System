@@ -12,7 +12,7 @@ The project has a dependency on `json-simple-1.1.1.jar`.
 In order to use the program, you need to put the latest `json-simple-1.1.1.jar` in your CLASSPATH before compiling 
 and running the project. 
 
-A copy of the JAR is included in the Root directory of the project.
+A copy of the JAR is included in the */lib* directory of the project.
 
 You can add the dependency as follows:
 
