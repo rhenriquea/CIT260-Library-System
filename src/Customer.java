@@ -53,7 +53,13 @@ public class Customer extends Person {
      * @param bookISBN A int containing the ISBN to be removed from the collection.
      */
     public void returnBook(int bookISBN) {
-        books.removeIf(b -> b.getIsbn() == bookISBN);
+        for (Book book : books) {
+            if (book.getIsbn() == bookISBN) {
+                books.removeIf(b -> b.getIsbn() == bookISBN);
+                return;
+            }
+        }
+        System.out.print("\u001B[31m" + "Customer does not have any book with ISBN " + bookISBN + "\u001B[0m");
     }
 
     /**

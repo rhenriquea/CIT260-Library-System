@@ -72,7 +72,6 @@ public class InputValidators {
                 System.out.println("Only alphabet and integers are accepted. " +
                         "Comma, dots and special chars are not accepted.");
                 System.out.print("\u001B[0m");
-
             }
             // do loop while the string is invalid
         } while (!value.matches(regex));
