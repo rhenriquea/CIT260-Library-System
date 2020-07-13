@@ -1,5 +1,12 @@
 import java.util.Scanner;
 
+/**
+ * Main controller class, responsible for the user menus.
+ *
+ * @author Alex Uskova
+ * @author Rafael Almeida
+ * @version 1.0
+ */
 public class Main {
 
     static Library library = new Library();
@@ -326,6 +333,7 @@ public class Main {
 
 
         customer.returnBook(bookISBN);
+
         Book book = library.findBookByISBN(bookISBN);
         library.setBookAsRented(book, false);
 

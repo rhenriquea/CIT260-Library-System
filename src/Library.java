@@ -20,7 +20,6 @@ public class Library {
     }
 
     // GETTERS
-
     /**
      * Gets the books registered in the library
      *
